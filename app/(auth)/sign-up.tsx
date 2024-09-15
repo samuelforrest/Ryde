@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { icons, images } from "@/constants";
 import { useState } from "react";
+import OAuth from "@/components/Oauth";
 
 const SignUp = () => {
   const [form, setForm] = useState ({
@@ -53,6 +54,9 @@ const SignUp = () => {
             onPress={onSignUpPress}
             className="mt-6"
           />
+
+          <OAuth />
+          
           <Link
             href="/sign-in"
             className="text-lg text-center text-general-200 mt-10"
