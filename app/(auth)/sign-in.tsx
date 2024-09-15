@@ -4,7 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { icons, images } from "@/constants";
 import { useState } from "react";
-import OAuth from "@/components/Oauth";
+import OAuth from "@/components/OAuth";
 
 const SignIn = () => {
   const [form, setForm] = useState ({
