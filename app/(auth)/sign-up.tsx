@@ -5,15 +5,62 @@ import InputField from "@/components/InputField";
 import { icons, images } from "@/constants";
 import { useState } from "react";
 import OAuth from "@/components/Oauth";
+import { useSignUp } from "@/clerk/clerk-expo";
 
 const SignUp = () => {
+
+  const { isLoaded, signUp, setActive } = useSignUp()
+
   const [form, setForm] = useState ({
     name: "", 
     email: "",
     password: "",
   });
 
-  const onSignUpPress = async () => {};
+  const onSignUpPress = async () => {
+    if (!isLoaded) {
+      return
+    }
+
+    try {
+      await signUp.create({
+        emailAddress,
+        password,
+      })
+
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+
+      setPendingVerification(true)
+    } catch (err: any) {
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.error(JSON.stringify(err, null, 2))
+    }
+  }
+
+  const onPressVerify = async () => {
+    if (!isLoaded) {
+      return
+    }
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      })
+
+      if (completeSignUp.status === 'complete') {
+        await setActive({ session: completeSignUp.createdSessionId })
+        router.replace('/')
+      } else {
+        console.error(JSON.stringify(completeSignUp, null, 2))
+      }
+    } catch (err: any) {
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.error(JSON.stringify(err, null, 2))
+    }
+  }
+
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -56,7 +103,7 @@ const SignUp = () => {
           />
 
           <OAuth />
-          
+
           <Link
             href="/sign-in"
             className="text-lg text-center text-general-200 mt-10"
